@@ -1,4 +1,5 @@
-compile-scripts
-===============
+code
+====
 
-Scripts that compile stuff
+- Scripts that compile stuff
+- Small programs that don't deserve their own repo

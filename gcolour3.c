@@ -2,7 +2,7 @@
    gcolour3 - "I don't care if it's considered `deprecated`; the new version SUCKS!"
    v1.0 2014-06-08 Steven Honeyman <stevenhoneyman at gmail com>
 
-   Compile using: gcc gcolour3.c -Os -s `pkg-config gtk+-3.0 --cflags` `pkg-config gtk+-3.0 --libs` -o gcolour3
+   Compile using: gcc gcolour3.c -Os -s `pkg-config gtk+-3.0 --cflags --libs` -o gcolour3
 */
 
 #include <gtk/gtk.h>

@@ -3,19 +3,21 @@
 # the original urlwatch is slow and buggy
 # Source: https://github.com/keenerd/pkgbuild-watch
 
-if [ $# -eq 0 ]; then
+diffargs=""
+cache="$HOME/.urlwatch/cache"
+DATAFILE="$HOME/.urlwatch/urls.txt"
+
+if [ $# -eq 1 ]; then
+    DATAFILE="$1"
+elif [ ! -f "$DATAFILE" ]; then
     echo "cheap bash knockoff of urlwatch"
     echo "urlwatch.sh url-list.txt"
     exit
 fi
 
-urlfile="$1"
-diffargs=""
-cache="$HOME/.urlwatch/cache"
-mkdir -p "$cache"
-
 COLOR1='\e[1;32m'
 ENDC='\e[0m'
+mkdir -p "$cache"
 
 nap()  # none : none
 {
@@ -50,8 +52,9 @@ urlcheck()  # url : pretty print
 }
 
 while read line; do
-    # todo, filter comments
-    urlcheck "$line" &
-    nap
-done < "$urlfile"
+    if echo -ne $line|grep -qv '^[#\n]'; then
+        urlcheck "$line" &
+        nap
+    fi
+done < "$DATAFILE"
 wait

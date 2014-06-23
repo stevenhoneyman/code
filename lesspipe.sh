@@ -21,7 +21,7 @@ if [ -t 0 ]; then
     if [ ! -e "$source" ] && [ ! -z $(type -P "$source") ]; then
 	source=$(type -P "$source")
     fi
-    if file -b --mime-type "$source" | grep -q 'text'; then
+    if file -b --mime-type "$source" | grep -q 'text\|xml'; then
 	case $source in
 	    *ChangeLog|*changelog)  $SRC_HLT_CMD --lang-def=changelog.lang -i "$source" ;;
 	    *Makefile|*makefile)    $SRC_HLT_CMD --lang-def=makefile.lang -i "$source" ;;
@@ -45,7 +45,7 @@ else
     stdintemp=$(mktemp)
     cat /dev/stdin > $stdintemp
     MIME=$(file -b --mime-type $stdintemp)
-    if echo $MIME | grep -q 'text'; then
+    if echo $MIME | grep -q 'text\|xml'; then
 	case $MIME in
 	    text/x-c) 		$SRC_HLT_CMD --lang-def=c.lang -n -i "$stdintemp" ;;
 	    text/x-shellscript)	$SRC_HLT_CMD --lang-def=sh.lang -n -i "$stdintemp" ;;
@@ -53,6 +53,7 @@ else
 	    text/x-python)	$SRC_HLT_CMD --lang-def=python.lang -n -i "$stdintemp" ;;
 	    text/x-perl)	$SRC_HLT_CMD --lang-def=perl.lang -n -i "$stdintemp" ;;
 	    text/x-sql)		$SRC_HLT_CMD --lang-def=sql.lang -n -i "$stdintemp" ;;
+	    application/xml)	$SRC_HLT_CMD --lang-def=xml.lang -n -i "$stdintemp" ;;
 	    text/troff)  	mandoc "$stdintemp" ;;
 	    *)  		cat "$stdintemp" ;;
 	esac

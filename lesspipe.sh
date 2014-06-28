@@ -1,13 +1,13 @@
 #!/bin/sh
 #
 # lesspipe.sh - preprocessor for less.
-# 2014-06-23 Steven Honeyman <stevenhoneyman at gmail com>
+# 2014-06-28 Steven Honeyman <stevenhoneyman at gmail com>
 #
 # Usage: in ~/.bashrc (etc), add:
 #   export LESSOPEN="|- lesspipe.sh %s"
 #
 
-SRC_HLT_CMD="source-highlight --failsafe --tab=4 -f esc256-steven --style-file=esc256.style "
+SRC_HLT_CMD="source-highlight --failsafe --tab=4 -f esc256-steven --style-file=esc256-steven.style "
 
 show_unknown() {
     file "$1"
@@ -23,9 +23,9 @@ if [ -t 0 ]; then
     fi
     if file -b --mime-type "$source" | grep -q 'text\|xml'; then
 	case $source in
-	    *ChangeLog|*changelog)  $SRC_HLT_CMD --lang-def=changelog.lang -i "$source" ;;
-	    *Makefile|*makefile)    $SRC_HLT_CMD --lang-def=makefile.lang -i "$source" ;;
-	    .bashrc|.bash_*)	    $SRC_HLT_CMD --lang-def=sh.lang -n -i "$source" ;;
+	    *ChangeLog|*changelog)  	$SRC_HLT_CMD --lang-def=changelog.lang -i "$source" ;;
+	    *Makefile|*makefile)    	$SRC_HLT_CMD --lang-def=makefile.lang -i "$source" ;;
+	    .bashrc|.bash_*|PKGBUILD*)	$SRC_HLT_CMD --lang-def=sh.lang -n -i "$source" ;;
 	    *.awk|*.groff|*.java|*.js|*.m4|*.php|*.pl|*.pm|*.pod|*.sh|\
 		*.ad[asb]|*.asm|*.inc|*.[ch]|*.[ch]pp|*.[ch]xx|*.cc|*.hh|\
 		*.lsp|*.l|*.pas|*.p|*.xml|*.xps|*.xsl|*.axp|*.ppd|*.pov|\
@@ -34,8 +34,8 @@ if [ -t 0 ]; then
 	    *.1)  		    mandoc "$source" ;;
 	    *)    		    $SRC_HLT_CMD --infer-lang -i "$source" ;;
 	esac
-    elif echo "$source" | grep -q 'share/man/man./'; then
-	zcat "$source" | mandoc
+    elif [[ "$source" == *share/man/man* ]]; then
+	gzip -cdfq "$source" | mandoc
     else
 	# without the check, "less --help" errors when xxd tries to open it
 	[ -f "$source" ] && show_unknown "$source"

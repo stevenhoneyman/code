@@ -23,16 +23,16 @@ if [ -t 0 ]; then
     fi
     if file -b --mime-type "$source" | grep -q 'text\|xml'; then
 	case $source in
-	    *ChangeLog|*changelog)  	$SRC_HLT_CMD --lang-def=changelog.lang -i "$source" ;;
-	    *Makefile|*makefile)    	$SRC_HLT_CMD --lang-def=makefile.lang -i "$source" ;;
-	    .bashrc|.bash_*|PKGBUILD*)	$SRC_HLT_CMD --lang-def=sh.lang -n -i "$source" ;;
+	    *ChangeLog|*changelog)  		$SRC_HLT_CMD --lang-def=changelog.lang -i "$source" ;;
+	    *Makefile|*makefile)    		$SRC_HLT_CMD --lang-def=makefile.lang -i "$source" ;;
+	    *.bashrc|*/.bash_*|*/PKGBUILD*)	$SRC_HLT_CMD --lang-def=sh.lang -n -i "$source" ;;
 	    *.awk|*.groff|*.java|*.js|*.m4|*.php|*.pl|*.pm|*.pod|*.sh|\
 		*.ad[asb]|*.asm|*.inc|*.[ch]|*.[ch]pp|*.[ch]xx|*.cc|*.hh|\
 		*.lsp|*.l|*.pas|*.p|*.xml|*.xps|*.xsl|*.axp|*.ppd|*.pov|\
 		*.py|*.rb|*.sql|*.ebuild|*.eclass)
-				    $SRC_HLT_CMD --infer-lang -n -i "$source" ;;
-	    *.1)  		    mandoc "$source" ;;
-	    *)    		    $SRC_HLT_CMD --infer-lang -i "$source" ;;
+					$SRC_HLT_CMD --infer-lang -n -i "$source" ;;
+	    *.1)  		    	mandoc "$source" ;;
+	    *)    		    	$SRC_HLT_CMD --infer-lang -i "$source" ;;
 	esac
     elif [[ "$source" == *share/man/man* ]]; then
 	gzip -cdfq "$source" | mandoc

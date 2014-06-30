@@ -1,11 +1,12 @@
 #!/bin/sh
 #
-# dl_wine_apps.sh - downloads & unpacks some free stuff that
-#                   doesnt have a good linux alternative
+# Filename: dl_wine_apps.sh
+# Desc:     downloads & unpacks some free stuff that doesnt have a good linux alternative
+# Date:     2014-06-30
+# URL:      https://github.com/stevenhoneyman/code/blob/master/dl_wine_apps.sh
+# Author:   Steven Honeyman <stevenhoneyman at gmail com>
 #
 # Pre-reqs: cabextract, md5deep, unzip, wget
-#
-# 2014-06-30 Steven Honeyman <stevenhoneyman at gmail com>
 #
 
 #----------------------------------------------------------------
@@ -80,7 +81,7 @@ fi
 mkdir -p "$DESTDIR"/mspaint
 if ! isCached "_archives/KB978706.exe"; then
     echo -n " ==> Downloading Microsoft Update KB978706... "
-    wget -q -O "$CACHEDIR"/_archives/KB978706.exe  http://download.microsoft.com/download/0/9/0/090233F4-CD1F-4B86-906B-D74E6F43B820/WindowsServer2003.WindowsXP-KB978706-x64-ENU.exe
+    wget -q -O "$CACHEDIR"/_archives/KB978706.exe http://download.microsoft.com/download/0/9/0/090233F4-CD1F-4B86-906B-D74E6F43B820/WindowsServer2003.WindowsXP-KB978706-x64-ENU.exe
     checkMD5 "$CACHEDIR"/_archives/KB978706.exe
 fi
 

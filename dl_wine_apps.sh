@@ -2,11 +2,11 @@
 #
 # Filename: dl_wine_apps.sh
 # Desc:     downloads & unpacks some free stuff that doesnt have a good linux alternative
-# Date:     2014-06-30
+# Date:     2014-07-01
 # URL:      https://github.com/stevenhoneyman/code/blob/master/dl_wine_apps.sh
 # Author:   Steven Honeyman <stevenhoneyman at gmail com>
 #
-# Pre-reqs: cabextract, md5deep, unzip, wget
+# Pre-reqs: cabextract, md5deep, unzip, p7zip, wget
 #
 
 #----------------------------------------------------------------
@@ -92,6 +92,26 @@ else
     cabextract -p "$CACHEDIR"/_archives/KB978706.exe -F 'SP2GDR/mspaint.exe' >"$DESTDIR"/mspaint/mspaint.exe
     cabextract -p "$CACHEDIR"/_archives/KB2584577.exe -F 'sp2qfe/mfc42u.dll' >"$DESTDIR"/mspaint/mfc42u.dll
 fi
+
+# WinRAR
+# Finds the latest version automatically
+
+mkdir -p "$DESTDIR"/winrar
+if [ "$WINEARCH" == "win32" ]; then
+    WRAR=$(wget http://www.rarlab.com/download.htm -O - -q | grep -om1 '/rar/wrar[0-9]*.exe')
+else
+    WRAR=$(wget http://www.rarlab.com/download.htm -O - -q | grep -om1 '/rar/winrar-x64-[0-9]*.exe')
+fi
+
+if ! isCached "_archives/${WRAR##*/}"; then
+    echo " ==> Downloading WinRAR (latest version)... "
+    wget -q -P "${CACHEDIR}"/_archives/ http://www.rarlab.com${WRAR}
+    md5deep -b "${CACHEDIR}/_archives/${WRAR##*/}" >> "$CACHEDIR/.checksums"
+fi
+
+7z e -bd -y "${CACHEDIR}/_archives/${WRAR##*/}" -o"$DESTDIR"/winrar -x'!Uninstall*' -x'!RarExt*.dll' -x'!Order.htm' >/dev/null
+
+
 
 echo "Cleaning up any leftover temporary files..."
 rm -rf "${TEMPDIR}"
